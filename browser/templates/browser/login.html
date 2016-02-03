@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% extends 'browser/base.html' %}
+{% block content %}
+<div class="account-wall"> 
+    <div class="container">
+  
+        <form id="login_form" action="/browser/login/" method="post" class="form-signin">
+            <legend>Please provide your credentials {{error}}</legend>
+            {% csrf_token %}
+            <div class="form-group, col-sm-8" style="col-md-offset-150">
+                
+                <label for="id">name:</label>
+                <input type="text" class="form-control" id="id" name ="username">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd" name="password">
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+        </form>
+    </div>
+</div> 
+{% endblock %}

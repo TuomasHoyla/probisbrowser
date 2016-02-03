@@ -1,0 +1,105 @@
+{% extends 'browser/base.html' %} 
+{% load staticfiles %} 
+{% block content %}
+
+<script>
+    
+    //make block draggable
+    $(document).ready(function () {
+        $(function () {
+            $("#draggable").draggable();
+            containment: "parent"
+        });
+
+        //hae kayttajan tiedot AJAX 
+        $(".itemi").click(function () {
+            var catid;
+            catid = $(this).attr("data-catid");
+            $.get('/userdetails/', {
+                category_id: catid
+            }, function (data) {
+                $("#categoryContainer").html(data);
+            });
+        });
+
+        /**
+        $(".btn").click(function () {
+            var catid = $("#responses_per_page").val();
+            $.get('/browser/', {
+                page: catid
+            }, function (data) {
+                $("body").html(data);
+            });
+        })**/
+    });
+</script>
+
+
+{% if user.is_authenticated %}
+<div id="draggable" class="panel panel-primary ui-widget-content">
+    <div class="panel-heading">User browser. Click row for details</div>
+    <div class="panel-body">
+        <div class="col-sm-8">
+
+            <table class="table table-striped">
+
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Adress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for person in people.object_list %}
+                    <!--Taa on aika hack, jotta saa ajax-kutsun toimimaan ettei koko sivu lataudu-->
+                    <tr class="itemi" data-catid="{{person.id}}">
+                        <td>{{ person.firstname }}</td>
+                        <td> {{ person.lastname }}</td>
+                        <td> {{ person.address }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <div class="input-group">
+                <input id="responses_per_page" type="text" class="form-control" placeholder="Go to page..">
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="button">Go</button>
+                </span>
+            </div>
+            </br>
+            <div id="categoryContainer" class="container"></div>
+        </div>
+        <!--Pagination alkaa tasta-->
+            {% load i18n %}
+        <ul class="pagination">
+            {% if people.has_previous %}
+            <li><a href="?{{ people.previous_page_number.querystring }}" class="prev">&lsaquo;&lsaquo; {% trans "previous" %}</a></li>
+            {% else %}
+            <!-- <span class="disabled prev">&lsaquo;&lsaquo; {% trans "previous" %}</span> -->
+            {% endif %} {% for page in people.pages %} {% if page %} {% ifequal page people.number %}
+            <li class="active"><span class="current page">{{ page }}</span></li>
+            {% else %}
+            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+            {% endifequal %} {% else %}
+            <li><a>...</a></li>
+            {% endif %} {% endfor %} {% if people.has_next %}
+            <li><a href="?{{ people.next_page_number.querystring }}" class="next">{% trans "next" %} &rsaquo;&rsaquo;</a></li>
+            {% else %}
+            <!-- <span class="disabled next">{% trans "next" %} &rsaquo;&rsaquo;</span> -->
+            {% endif %}
+        </ul>
+    <!--pagination loppuu-->
+    </div>
+</div>
+<!--Jos kayttaja ei ole autentikoitu-->
+{% else %}
+<div align="center">
+    <h5>Please log in to continue</h5>
+    <p>Try admin/admin..</p>
+</div>
+
+{%endif%} {% endblock %}

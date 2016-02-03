@@ -1,0 +1,44 @@
+<script>
+$('.menu li a').click(function(e) {
+  var $this = $(this);
+  if (!$this.hasClass('active')) {
+    $this.addClass('active');
+  }
+  e.preventDefault();
+});
+</script>
+
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">          
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href={% url "index" %}  class="active">Home</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+         
+            <ul class="nav navbar-nav">
+             {% if user.is_authenticated %}
+                <!--Tän täytyy olla staattinen url koska muuten sivuhakunappi rikkoo tän-->
+                <li><a href='/admin'>Admin page</a></li>
+            {%endif%}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <!--Tän täytyy olla staattinen url koska muuten sivuhakunappi rikkoo tän-->
+                <li><a href='/browser/logout'>Logout</a></li>
+                {% else %}
+                
+                <li><a href={% url "login" %}>Login</a></li>
+                {%endif%}
+
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
