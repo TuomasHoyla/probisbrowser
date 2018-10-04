@@ -24,7 +24,7 @@ if not settings.DEBUG:
         urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^browser/', include('browser.urls')), # ADD THIS NEW TUPLE!
     url(r'^', include('browser.urls')),
 ]
